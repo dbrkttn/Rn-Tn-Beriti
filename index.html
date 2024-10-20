@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="data/TrackPertagastech1820Okt_2.js"></script>
+        <script src="data/TrackRadon1820Okt_3.js"></script>
+        <script src="data/TitikRencanaSurveiBeriti_4.js"></script>
+        <script src="data/TitikCapaianPertagastech_5.js"></script>
+        <script src="data/TitikCapaianRadon_6.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[-3.297406797448447,102.23686598968503],[-3.2465524673253934,102.32428524931902]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        function removeEmptyRowsFromPopupContent(content, feature) {
+         var tempDiv = document.createElement('div');
+         tempDiv.innerHTML = content;
+         var rows = tempDiv.querySelectorAll('tr');
+         for (var i = 0; i < rows.length; i++) {
+             var td = rows[i].querySelector('td.visible-with-data');
+             var key = td ? td.id : '';
+             if (td && td.classList.contains('visible-with-data') && feature.properties[key] == null) {
+                 rows[i].parentNode.removeChild(rows[i]);
+             }
+         }
+         return tempDiv.innerHTML;
+        }
+        document.querySelector(".leaflet-popup-pane").addEventListener("load", function(event) {
+          var tagName = event.target.tagName,
+            popup = map._popup;
+          // Also check if flag is already set.
+          if (tagName === "IMG" && popup && !popup._updated) {
+            popup._updated = true; // Set flag to prevent looping.
+            popup.update();
+          }
+        }, true);
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_OpenTopoMap_0');
+        map.getPane('pane_OpenTopoMap_0').style.zIndex = 400;
+        var layer_OpenTopoMap_0 = L.tileLayer('https://tile.opentopomap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_OpenTopoMap_0',
+            opacity: 0.8,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 17
+        });
+        layer_OpenTopoMap_0;
+        map.addLayer(layer_OpenTopoMap_0);
+        map.createPane('pane_GoogleSatelliteHybrid_1');
+        map.getPane('pane_GoogleSatelliteHybrid_1').style.zIndex = 401;
+        var layer_GoogleSatelliteHybrid_1 = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleSatelliteHybrid_1',
+            opacity: 0.5,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_GoogleSatelliteHybrid_1;
+        function pop_TrackPertagastech1820Okt_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NAME'] !== null ? autolinker.link(feature.properties['NAME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LAYER'] !== null ? autolinker.link(feature.properties['LAYER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KML_STYLE'] !== null ? autolinker.link(feature.properties['KML_STYLE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KML_FOLDER'] !== null ? autolinker.link(feature.properties['KML_FOLDER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TimeStamp'] !== null ? autolinker.link(feature.properties['TimeStamp'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+            var popup = layer.getPopup();
+            var content = popup.getContent();
+            var updatedContent = removeEmptyRowsFromPopupContent(content, feature);
+            popup.setContent(updatedContent);
+        }
+
+        function style_TrackPertagastech1820Okt_2_0() {
+            return {
+                pane: 'pane_TrackPertagastech1820Okt_2',
+                opacity: 1,
+                color: 'rgba(31,120,180,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: false,
+            }
+        }
+        map.createPane('pane_TrackPertagastech1820Okt_2');
+        map.getPane('pane_TrackPertagastech1820Okt_2').style.zIndex = 402;
+        map.getPane('pane_TrackPertagastech1820Okt_2').style['mix-blend-mode'] = 'normal';
+        var layer_TrackPertagastech1820Okt_2 = new L.geoJson(json_TrackPertagastech1820Okt_2, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_TrackPertagastech1820Okt_2',
+            layerName: 'layer_TrackPertagastech1820Okt_2',
+            pane: 'pane_TrackPertagastech1820Okt_2',
+            onEachFeature: pop_TrackPertagastech1820Okt_2,
+            style: style_TrackPertagastech1820Okt_2_0,
+        });
+        bounds_group.addLayer(layer_TrackPertagastech1820Okt_2);
+        map.addLayer(layer_TrackPertagastech1820Okt_2);
+        function pop_TrackRadon1820Okt_3(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NAME'] !== null ? autolinker.link(feature.properties['NAME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LAYER'] !== null ? autolinker.link(feature.properties['LAYER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KML_STYLE'] !== null ? autolinker.link(feature.properties['KML_STYLE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KML_FOLDER'] !== null ? autolinker.link(feature.properties['KML_FOLDER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TimeStamp'] !== null ? autolinker.link(feature.properties['TimeStamp'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+            var popup = layer.getPopup();
+            var content = popup.getContent();
+            var updatedContent = removeEmptyRowsFromPopupContent(content, feature);
+            popup.setContent(updatedContent);
+        }
+
+        function style_TrackRadon1820Okt_3_0() {
+            return {
+                pane: 'pane_TrackRadon1820Okt_3',
+                opacity: 1,
+                color: 'rgba(227,26,28,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: false,
+            }
+        }
+        map.createPane('pane_TrackRadon1820Okt_3');
+        map.getPane('pane_TrackRadon1820Okt_3').style.zIndex = 403;
+        map.getPane('pane_TrackRadon1820Okt_3').style['mix-blend-mode'] = 'normal';
+        var layer_TrackRadon1820Okt_3 = new L.geoJson(json_TrackRadon1820Okt_3, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_TrackRadon1820Okt_3',
+            layerName: 'layer_TrackRadon1820Okt_3',
+            pane: 'pane_TrackRadon1820Okt_3',
+            onEachFeature: pop_TrackRadon1820Okt_3,
+            style: style_TrackRadon1820Okt_3_0,
+        });
+        bounds_group.addLayer(layer_TrackRadon1820Okt_3);
+        map.addLayer(layer_TrackRadon1820Okt_3);
+        function pop_TitikRencanaSurveiBeriti_4(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NAME'] !== null ? autolinker.link(feature.properties['NAME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LAYER'] !== null ? autolinker.link(feature.properties['LAYER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ELEVATION'] !== null ? autolinker.link(feature.properties['ELEVATION'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+            var popup = layer.getPopup();
+            var content = popup.getContent();
+            var updatedContent = removeEmptyRowsFromPopupContent(content, feature);
+            popup.setContent(updatedContent);
+        }
+
+        function style_TitikRencanaSurveiBeriti_4_0() {
+            return {
+                pane: 'pane_TitikRencanaSurveiBeriti_4',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(250,255,57,1.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_TitikRencanaSurveiBeriti_4');
+        map.getPane('pane_TitikRencanaSurveiBeriti_4').style.zIndex = 404;
+        map.getPane('pane_TitikRencanaSurveiBeriti_4').style['mix-blend-mode'] = 'normal';
+        var layer_TitikRencanaSurveiBeriti_4 = new L.geoJson(json_TitikRencanaSurveiBeriti_4, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_TitikRencanaSurveiBeriti_4',
+            layerName: 'layer_TitikRencanaSurveiBeriti_4',
+            pane: 'pane_TitikRencanaSurveiBeriti_4',
+            onEachFeature: pop_TitikRencanaSurveiBeriti_4,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_TitikRencanaSurveiBeriti_4_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_TitikRencanaSurveiBeriti_4);
+        map.addLayer(layer_TitikRencanaSurveiBeriti_4);
+        function pop_TitikCapaianPertagastech_5(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NAME'] !== null ? autolinker.link(feature.properties['NAME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LAYER'] !== null ? autolinker.link(feature.properties['LAYER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KML_STYLE'] !== null ? autolinker.link(feature.properties['KML_STYLE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KML_FOLDER'] !== null ? autolinker.link(feature.properties['KML_FOLDER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TimeStamp'] !== null ? autolinker.link(feature.properties['TimeStamp'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ELEVATION'] !== null ? autolinker.link(feature.properties['ELEVATION'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+            var popup = layer.getPopup();
+            var content = popup.getContent();
+            var updatedContent = removeEmptyRowsFromPopupContent(content, feature);
+            popup.setContent(updatedContent);
+        }
+
+        function style_TitikCapaianPertagastech_5_0() {
+            return {
+                pane: 'pane_TitikCapaianPertagastech_5',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(31,120,180,1.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_TitikCapaianPertagastech_5');
+        map.getPane('pane_TitikCapaianPertagastech_5').style.zIndex = 405;
+        map.getPane('pane_TitikCapaianPertagastech_5').style['mix-blend-mode'] = 'normal';
+        var layer_TitikCapaianPertagastech_5 = new L.geoJson(json_TitikCapaianPertagastech_5, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_TitikCapaianPertagastech_5',
+            layerName: 'layer_TitikCapaianPertagastech_5',
+            pane: 'pane_TitikCapaianPertagastech_5',
+            onEachFeature: pop_TitikCapaianPertagastech_5,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_TitikCapaianPertagastech_5_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_TitikCapaianPertagastech_5);
+        map.addLayer(layer_TitikCapaianPertagastech_5);
+        function pop_TitikCapaianRadon_6(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td class="visible-with-data" id="Titik"colspan="2"><strong>Titik</strong><br />' + (feature.properties['Titik'] !== null ? autolinker.link(feature.properties['Titik'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Average Radon 30"colspan="2"><strong>Average Radon 30</strong><br />' + (feature.properties['Average Radon 30'] !== null ? autolinker.link(feature.properties['Average Radon 30'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Average Thoron 30"colspan="2"><strong>Average Thoron 30</strong><br />' + (feature.properties['Average Thoron 30'] !== null ? autolinker.link(feature.properties['Average Thoron 30'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Average Radon 28"colspan="2"><strong>Average Radon 28</strong><br />' + (feature.properties['Average Radon 28'] !== null ? autolinker.link(feature.properties['Average Radon 28'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="Average Thoron 28"colspan="2"><strong>Average Thoron 28</strong><br />' + (feature.properties['Average Thoron 28'] !== null ? autolinker.link(feature.properties['Average Thoron 28'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+            var popup = layer.getPopup();
+            var content = popup.getContent();
+            var updatedContent = removeEmptyRowsFromPopupContent(content, feature);
+            popup.setContent(updatedContent);
+        }
+
+        function style_TitikCapaianRadon_6_0() {
+            return {
+                pane: 'pane_TitikCapaianRadon_6',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(227,26,28,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_TitikCapaianRadon_6');
+        map.getPane('pane_TitikCapaianRadon_6').style.zIndex = 406;
+        map.getPane('pane_TitikCapaianRadon_6').style['mix-blend-mode'] = 'normal';
+        var layer_TitikCapaianRadon_6 = new L.geoJson(json_TitikCapaianRadon_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_TitikCapaianRadon_6',
+            layerName: 'layer_TitikCapaianRadon_6',
+            pane: 'pane_TitikCapaianRadon_6',
+            onEachFeature: pop_TitikCapaianRadon_6,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_TitikCapaianRadon_6_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_TitikCapaianRadon_6);
+        map.addLayer(layer_TitikCapaianRadon_6);
+        var baseMaps = {};
+        var overlaysTree = [
+            {label: '<img src="legend/TitikCapaianRadon_6.png" /> Titik Capaian Radon', layer: layer_TitikCapaianRadon_6},
+            {label: '<img src="legend/TitikCapaianPertagastech_5.png" /> Titik Capaian Pertagastech', layer: layer_TitikCapaianPertagastech_5},
+            {label: '<img src="legend/TitikRencanaSurveiBeriti_4.png" /> Titik Rencana Survei Beriti', layer: layer_TitikRencanaSurveiBeriti_4},
+            {label: '<img src="legend/TrackRadon1820Okt_3.png" /> Track Radon 18-20 Okt', layer: layer_TrackRadon1820Okt_3},
+            {label: '<img src="legend/TrackPertagastech1820Okt_2.png" /> Track Pertagastech 18-20 Okt', layer: layer_TrackPertagastech1820Okt_2},
+            {label: "Google Satellite Hybrid", layer: layer_GoogleSatelliteHybrid_1},
+            {label: "OpenTopoMap", layer: layer_OpenTopoMap_0},]
+        var lay = L.control.layers.tree(null, overlaysTree,{
+            //namedToggle: true,
+            //selectorBack: false,
+            //closedSymbol: '&#8862; &#x1f5c0;',
+            //openedSymbol: '&#8863; &#x1f5c1;',
+            //collapseAll: 'Collapse all',
+            //expandAll: 'Expand all',
+            collapsed: false, 
+        });
+        lay.addTo(map);
+        setBounds();
+        var i = 0;
+        layer_TitikRencanaSurveiBeriti_4.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['NAME'] !== null?String('<div style="color: #323232; font-size: 10pt; font-family: \'Arial\', sans-serif;">' + layer.feature.properties['NAME']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_TitikRencanaSurveiBeriti_4'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_TitikCapaianPertagastech_5.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['NAME'] !== null?String('<div style="color: #323232; font-size: 10pt; font-family: \'Arial\', sans-serif;">' + layer.feature.properties['NAME']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_TitikCapaianPertagastech_5'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_TitikCapaianRadon_6.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Titik'] !== null?String('<div style="color: #323232; font-size: 10pt; font-family: \'Arial\', sans-serif;">' + layer.feature.properties['Titik']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_TitikCapaianRadon_6'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        resetLabels([layer_TitikRencanaSurveiBeriti_4,layer_TitikCapaianPertagastech_5,layer_TitikCapaianRadon_6]);
+        map.on("zoomend", function(){
+            resetLabels([layer_TitikRencanaSurveiBeriti_4,layer_TitikCapaianPertagastech_5,layer_TitikCapaianRadon_6]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_TitikRencanaSurveiBeriti_4,layer_TitikCapaianPertagastech_5,layer_TitikCapaianRadon_6]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_TitikRencanaSurveiBeriti_4,layer_TitikCapaianPertagastech_5,layer_TitikCapaianRadon_6]);
+        });
+        </script>
+    </body>
+</html>
